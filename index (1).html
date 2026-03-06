@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Misión 2026 – Panel de B.</title>
+<style>
+/* ============================================================
+   CSS VARIABLES POR TEMA
+   ============================================================ */
+:root {
+  --bg: #0B1020;
+  --bg2: #131929;
+  --bg3: #1a2340;
+  --card: #1e2d4a;
+  --card2: #243356;
+  --accent1: #FFD54A;
+  --accent2: #00E5FF;
+  --success: #39D98A;
+  --warn: #FFB020;
+  --danger: #FF4D4D;
+  --text: #EAF2FF;
+  --text2: #8BA3CC;
+  --border: #2a3d5e;
+  --radius: 14px;
+  --font-display: 'Trebuchet MS', 'Segoe UI', sans-serif;
+  --font-body: 'Segoe UI', Tahoma, sans-serif;
+  --star-opacity: 0.6;
+  --pattern-display: block;
+  --dino-display: none;
+  --lego-display: none;
+  --pixel-display: none;
+  --ocean-display: none;
+}
+
+/* TEMA ESPACIO (default) - ya definido arriba */
+
+/* TEMA LEGO */
+body.theme-lego {
+  --bg: #F5F0E8;
+  --bg2: #E8E0D0;
+  --bg3: #D4C8B4;
+  --card: #FFFFFF;
+  --card2: #F0EBE0;
+  --accent1: #E3000B;
+  --accent2: #006CB7;
+  --success: #009B3A;
+  --warn: #F5A623;
+  --danger: #E3000B;
+  --text: #1A1A1A;
+  --text2: #555555;
+  --border: #CCCCCC;
+}
+
+/* TEMA DINOSAURIOS */
+body.theme-dinos {
+  --bg: #0D1F0D;
+  --bg2: #122412;
+  --bg3: #192E19;
+  --card: #1E3A1E;
+  --card2: #254225;
+  --accent1: #8FFF5E;
+  --accent2: #FFD700;
+  --success: #39D98A;
+  --warn: #FFB020;
+  --danger: #FF4D4D;
+  --text: #E8FFE0;
+  --text2: #7AB87A;
+  --border: #2E4A2E;
+}
+
+/* TEMA PIXEL / AVENTURA */
+body.theme-pixel {
+  --bg: #1A0533;
+  --bg2: #220840;
+  --bg3: #2A0D50;
+  --card: #31135E;
+  --card2: #3A1870;
+  --accent1: #FF61FF;
+  --accent2: #00FF88;
+  --success: #00FF88;
+  --warn: #FFEE00;
+  --danger: #FF3355;
+  --text: #F0E0FF;
+  --text2: #A07ACC;
+  --border: #4A2080;
+}
+
+/* TEMA OCÉANO */
+body.theme-ocean {
+  --bg: #021B2E;
+  --bg2: #042540;
+  --bg3: #063052;
+  --card: #0A3D5C;
+  --card2: #0E4D70;
+  --accent1: #FF7043;
+  --accent2: #00E5FF;
+  --success: #26C6DA;
+  --warn: #FFB020;
+  --danger: #FF4D4D;
+  --text: #E0F7FA;
+  --text2: #80DEEA;
+  --border: #134B6E;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* Fondo animado para espacio */
+body:not(.theme-lego):not(.theme-pixel):not(.theme-ocean):not(.theme-dinos) #bg-canvas {
+  display: block;
+}
+#bg-canvas {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* Patrón lego */
+body.theme-lego #bg-canvas { display: none; }
+body.theme-lego body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.05) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.05) 40px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+#app { position: relative; z-index: 1; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.header-brand {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent1);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.header-brand span { color: var(--accent2); }
+
+.header-nav {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-month {
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-month:hover, .btn-month.active {
+  background: var(--accent1);
+  color: #111;
+  border-color: var(--accent1);
+}
+
+.header-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: auto;
+}
+
+.stat-badge {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.stat-badge .val { color: var(--accent1); }
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: var(--text);
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--bg3); border-color: var(--accent2); }
+.btn.primary { background: var(--accent1); color: #111; border-color: var(--accent1); }
+.btn.primary:hover { filter: brightness(1.1); }
+.btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+#main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  #main { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   NAV TABS
+   ============================================================ */
+#tabs {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: var(--text2);
+  padding: 8px 18px;
+  border-radius: 22px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.tab-btn:hover { border-color: var(--accent2); color: var(--text); }
+.tab-btn.active {
+  background: var(--accent2);
+  color: #000;
+  border-color: var(--accent2);
+}
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+#cal-section { grid-column: 1; }
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent1);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-header-day {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text2);
+  text-transform: uppercase;
+  padding: 4px;
+}
+
+.cal-day {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 4px;
+  min-height: 72px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cal-day:hover { border-color: var(--accent2); transform: translateY(-1px); }
+.cal-day.today { border-color: var(--accent1) !important; box-shadow: 0 0 10px rgba(255,213,74,0.3); }
+.cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
+.cal-day.empty:hover { transform: none; }
+
+.cal-day-num {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.cal-day.today .cal-day-num { color: var(--accent1); }
+
+/* Semáforo color de fondo del día */
+.cal-day.sem-green { border-color: var(--success); background: rgba(57,217,138,0.12); }
+.cal-day.sem-yellow { border-color: var(--warn); background: rgba(255,176,32,0.12); }
+.cal-day.sem-red { border-color: var(--danger); background: rgba(255,77,77,0.12); }
+
+.cal-day-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.sem-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-left: auto;
+}
+.sem-dot.green { background: var(--success); }
+.sem-dot.yellow { background: var(--warn); }
+.sem-dot.red { background: var(--danger); }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.card-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent2);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* XP / Nivel */
+.xp-bar-wrap { margin: 8px 0; }
+.xp-bar-bg {
+  background: var(--bg);
+  border-radius: 10px;
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+.xp-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-top: 4px;
+}
+
+/* Misiones */
+.mision-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+.mision-item.done {
+  border-color: var(--success);
+  background: rgba(57,217,138,0.08);
+}
+.mision-item .mision-icon { font-size: 1.1rem; }
+.mision-progress {
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.mision-progress-fill {
+  height: 100%;
+  background: var(--accent2);
+  border-radius: 4px;
+  transition: width 0.4s;
+}
+
+/* Rutina fija */
+.rutina-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.rutina-item:last-child { border-bottom: none; }
+.rutina-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent1);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   MODAL / PANEL DÍA
+   ============================================================ */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+#modal-overlay.open { display: flex; }
+
+#modal {
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 680px;
+  padding: 24px;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  margin: auto;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: var(--text);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+#modal-close:hover { background: var(--danger); border-color: var(--danger); }
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--accent1);
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+}
+
+/* Semáforo manual */
+.sem-selector {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.sem-selector label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text2);
+}
+.sem-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.sem-btn:hover { transform: scale(1.2); }
+.sem-btn.sem-green-btn { background: var(--success); }
+.sem-btn.sem-yellow-btn { background: var(--warn); }
+.sem-btn.sem-red-btn { background: var(--danger); }
+.sem-btn.sem-none-btn { background: var(--bg3); border-color: var(--border) !important; }
+.sem-btn.selected { border-color: white !important; box-shadow: 0 0 12px rgba(255,255,255,0.4); transform: scale(1.15); }
+
+/* Tabs del modal */
+.modal-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+}
+.modal-tab {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.modal-tab:hover { border-color: var(--accent2); color: var(--text); }
+.modal-tab.active { background: var(--accent2); color: #000; border-color: var(--accent2); }
+
+.modal-section { display: none; }
+.modal-section.active { display: block; }
+
+/* Campos del formulario */
+.field-group {
+  margin-bottom: 14px;
+}
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 5px;
+  display: block;
+}
+.field-input, .field-textarea, .field-select {
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-family: var(--font-body);
+  transition: border-color 0.2s;
+}
+.field-input:focus, .field-textarea:focus, .field-select:focus {
+  outline: none;
+  border-color: var(--accent2);
+}
+.field-textarea { min-height: 80px; resize: vertical; }
+.field-select option { background: var(--card2); }
+
+/* Checklist */
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+  padding: 8px 6px;
+}
+.checklist-item:hover { background: var(--bg3); }
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item input[type="checkbox"] {
+  width: 18px; height: 18px;
+  accent-color: var(--success);
+  cursor: pointer;
+}
+.checklist-item .item-label { font-size: 0.88rem; flex: 1; }
+.checklist-item .item-icon { font-size: 1rem; }
+
+/* Rating stars */
+.rating-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.rating-label { font-size: 0.82rem; color: var(--text2); min-width: 90px; }
+.rating-stars {
+  display: flex;
+  gap: 4px;
+}
+.rating-star {
+  width: 28px; height: 28px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+.rating-star:hover, .rating-star.on { background: var(--accent1); color: #111; border-color: var(--accent1); }
+
+/* Emoción selector */
+.emociones-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.emocion-btn {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.2s;
+}
+.emocion-btn span { font-size: 0.65rem; color: var(--text2); }
+.emocion-btn:hover, .emocion-btn.selected { border-color: var(--accent2); background: var(--card2); transform: scale(1.08); }
+
+/* Mini regulación */
+.respiracion-box {
+  background: var(--bg3);
+  border: 1px solid var(--accent2);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  display: none;
+}
+.respiracion-box.open { display: block; }
+.resp-step {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--accent2);
+  margin: 6px 0;
+}
+.resp-label {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text2);
+}
+
+/* Pantallas */
+.pantallas-ok { color: var(--success); font-size: 0.9rem; font-weight: 700; }
+.pantallas-warn { color: var(--warn); font-size: 0.9rem; font-weight: 700; }
+
+/* Plan de reparación */
+.plan-reparacion {
+  background: rgba(255,176,32,0.08);
+  border: 1px solid var(--warn);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 8px;
+  display: none;
+}
+.plan-reparacion.open { display: block; }
+.plan-reparacion .plan-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--warn);
+  margin-bottom: 8px;
+}
+
+/* Progreso barra */
+.progress-wrap { margin: 6px 0; }
+.progress-bg {
+  background: var(--bg);
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s;
+}
+
+/* Tienda de recompensas */
+.tienda-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.tienda-item:hover { border-color: var(--accent1); }
+.tienda-nombre { font-size: 0.88rem; font-weight: 700; flex: 1; }
+.tienda-costo {
+  color: var(--accent1);
+  font-weight: 800;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   SECTION: PLANIFICADOR ANUAL
+   ============================================================ */
+#plan-section { grid-column: 1 / -1; display: none; }
+
+.asignaturas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.asig-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.asig-card:hover { border-color: var(--accent2); }
+.asig-card .asig-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.asig-card .asig-nombre { font-size: 0.82rem; font-weight: 700; }
+.asig-card .asig-meta { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
+
+.evaluaciones-list { margin-top: 12px; }
+.eval-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.eval-fecha { font-size: 0.75rem; color: var(--text2); min-width: 85px; }
+.eval-asig { font-weight: 700; font-size: 0.85rem; }
+.eval-tema { font-size: 0.82rem; color: var(--text2); flex: 1; }
+.eval-prep { font-size: 0.8rem; }
+
+/* ============================================================
+   SECTION: PANEL ADULTOS
+   ============================================================ */
+#adultos-section { grid-column: 1 / -1; display: none; }
+
+.adultos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.reporte-semana {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.reporte-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.reporte-row:last-child { border-bottom: none; }
+.reporte-val { font-weight: 800; color: var(--accent1); }
+
+/* Mini gráfico de barras */
+.chart-wrap { margin-top: 10px; }
+.chart-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+}
+.chart-bar-label { min-width: 80px; color: var(--text2); text-align: right; }
+.chart-bar-bg {
+  flex: 1;
+  background: var(--bg);
+  border-radius: 4px;
+  height: 18px;
+  overflow: hidden;
+}
+.chart-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #111;
+  transition: width 0.5s;
+}
+
+/* ============================================================
+   THEME PICKER
+   ============================================================ */
+#theme-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.theme-btn {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: var(--card);
+  color: var(--text);
+  transition: all 0.2s;
+}
+.theme-btn:hover, .theme-btn.active { border-color: var(--accent1); color: var(--accent1); }
+
+/* ============================================================
+   CONFETTI (recompensa)
+   ============================================================ */
+.confetti-particle {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confetti-fall 1.5s ease-in forwards;
+}
+@keyframes confetti-fall {
+  0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+@media (max-width: 600px) {
+  #header { padding: 8px; gap: 6px; }
+  .header-brand { font-size: 1rem; }
+  .stat-badge { font-size: 0.72rem; padding: 4px 8px; }
+  #main { padding: 8px; gap: 10px; }
+  #calendar { gap: 3px; }
+  .cal-day { min-height: 58px; padding: 4px 2px; }
+  .cal-day-num { font-size: 0.78rem; }
+  #modal { padding: 16px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+
+/* Tooltip XP gained */
+.xp-popup {
+  position: fixed;
+  pointer-events: none;
+  background: var(--accent1);
+  color: #111;
+  font-weight: 900;
+  font-size: 1.1rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  z-index: 9998;
+  animation: xp-float 1.2s ease forwards;
+}
+@keyframes xp-float {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* Alertas inline */
+.alert-box {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.alert-box.warn { background: rgba(255,176,32,0.15); border: 1px solid var(--warn); color: var(--warn); }
+.alert-box.info { background: rgba(0,229,255,0.1); border: 1px solid var(--accent2); color: var(--accent2); }
+.alert-box.success { background: rgba(57,217,138,0.1); border: 1px solid var(--success); color: var(--success); }
+
+/* Section hidden/visible */
+.tab-section { display: none; }
+.tab-section.visible { display: block; }
+
+/* Evaluaciones input form */
+.eval-form {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.eval-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+@media (max-width: 500px) { .eval-form-row { grid-template-columns: 1fr; } }
+
+/* Toggle pantallas días */
+.dias-grid {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.dia-toggle {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dia-toggle.on { background: var(--accent2); color: #000; border-color: var(--accent2); }
+
+/* Streak fire */
+.streak-fire {
+  animation: fire-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes fire-pulse {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.4); }
+}
+</style>
+</head>
+<body>
+
+<!-- Fondo canvas estrellas -->
+<canvas id="bg-canvas"></canvas>
+
+<div id="app">
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<div id="header">
+  <div class="header-brand">🚀 <span>Misión</span> 2026</div>
+
+  <div class="header-nav">
+    <button class="btn-month" onclick="changeMonth(-1)">‹</button>
+    <span id="mes-label" style="font-weight:800;font-size:1rem;color:var(--accent1);min-width:120px;text-align:center;"></span>
+    <button class="btn-month" onclick="changeMonth(1)">›</button>
+  </div>
+
+  <div class="header-stats">
+    <div class="stat-badge">⭐ XP semana: <span class="val" id="hdr-xp">0</span></div>
+    <div class="stat-badge"><span class="streak-fire">🔥</span> Racha: <span class="val" id="hdr-racha">0</span> días</div>
+    <div class="stat-badge">📊 Semana: <span class="val" id="hdr-pct">0%</span></div>
+    <div class="stat-badge" id="hdr-nivel">🏅 Nivel <span class="val">1</span></div>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn" onclick="exportarJSON()">📤 Exportar</button>
+    <button class="btn" onclick="importarJSON()">📥 Importar</button>
+    <input type="file" id="file-import" style="display:none" accept=".json" onchange="leerJSON(event)">
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<div id="main">
+
+  <!-- TABS -->
+  <div id="tabs">
+    <button class="tab-btn active" data-tab="calendario" onclick="switchTab('calendario')">📅 Calendario</button>
+    <button class="tab-btn" data-tab="planificador" onclick="switchTab('planificador')">📋 Planificador</button>
+    <button class="tab-btn" data-tab="rutinas" onclick="switchTab('rutinas')">⏰ Rutinas</button>
+    <button class="tab-btn" data-tab="tienda" onclick="switchTab('tienda')">🏆 Tienda</button>
+    <button class="tab-btn" data-tab="adultos" onclick="switchTab('adultos')">👤 Adultos</button>
+    <button class="tab-btn" data-tab="ajustes" onclick="switchTab('ajustes')">⚙️ Ajustes</button>
+  </div>
+
+  <!-- ====================================================
+       TAB: CALENDARIO
+       ==================================================== -->
+  <div id="tab-calendario" class="tab-section visible" style="grid-column:1;display:contents;">
+
+    <!-- Calendario -->
+    <div id="cal-section">
+      <div class="section-title" id="cal-title">📅 Enero 2026</div>
+      <div id="calendar"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+
+      <!-- XP / Nivel -->
+      <div class="card">
+        <div class="card-title">⚡ Energía & Nivel</div>
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:8px;">
+          <div style="font-size:2.5rem;font-weight:900;color:var(--accent1);" id="sb-nivel">1</div>
+          <div style="flex:1;">
+            <div style="font-size:0.78rem;color:var(--text2);">XP total</div>
+            <div style="font-size:1.1rem;font-weight:800;" id="sb-xp-total">0 XP</div>
+          </div>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+          <div class="xp-label"><span>Nivel <span id="xp-lvl-cur">1</span></span><span id="xp-next">100 XP para nivel 2</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+          <div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-size:1.3rem;">🔥</div>
+            <div style="font-size:1rem;font-weight:800;color:var(--warn);" id="sb-racha">0</div>
+            <div style="font-size:0.7rem;color:var(--text2);">Racha días</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-size:1.3rem;">✅</div>
+            <div style="font-size:1rem;font-weight:800;color:var(--success);" id="sb-pct-mes">0%</div>
+            <div style="font-size:0.7rem;color:var(--text2);">Días verdes mes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Misiones semanales -->
+      <div class="card">
+        <div class="card-title">🎯 Misiones de la Semana</div>
+        <div id="misiones-container"></div>
+      </div>
+
+      <!-- Logros -->
+      <div class="card">
+        <div class="card-title">🏅 Logros</div>
+        <div id="logros-container" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+
+    </div>
+  </div><!-- /tab-calendario -->
+
+  <!-- ====================================================
+       TAB: PLANIFICADOR
+       ==================================================== -->
+  <div id="tab-planificador" class="tab-section" style="grid-column:1/-1">
+    <div class="section-title">📋 Planificador 2026</div>
+
+    <div class="asignaturas-grid" id="asig-grid"></div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title">➕ Agregar Evaluación</div>
+      <div class="eval-form">
+        <div class="eval-form-row">
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">Asignatura</label>
+            <select class="field-select" id="eval-asig">
+              <option>Lenguaje</option>
+              <option>Matemática</option>
+              <option>Ciencias Naturales</option>
+              <option>Historia y Geografía</option>
+              <option>Inglés</option>
+              <option>Educación Física</option>
+              <option>Religión</option>
+              <option>Orientación</option>
+              <option>Tecnología</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">Fecha</label>
+            <input type="date" class="field-input" id="eval-fecha">
+          </div>
+        </div>
+        <div class="eval-form-row">
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">Tema / Contenido</label>
+            <input type="text" class="field-input" id="eval-tema" placeholder="Ej: Fracciones">
+          </div>
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">% Preparación (0–100)</label>
+            <input type="number" class="field-input" id="eval-prep" min="0" max="100" value="0">
+          </div>
+        </div>
+        <button class="btn primary" onclick="agregarEval()">➕ Agregar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 Evaluaciones registradas</div>
+      <div id="eval-list"></div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       TAB: RUTINAS
+       ==================================================== -->
+  <div id="tab-rutinas" class="tab-section" style="grid-column:1/-1">
+    <div class="section-title">⏰ Agenda Semanal</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;">
+
+      <!-- Actividades prioritarias dinámicas -->
+      <div class="card">
+        <div class="card-title">🎯 Actividades Prioritarias del Día</div>
+        <div id="rutinas-actividades-display"></div>
+        <div style="font-size:0.78rem;color:var(--text2);margin-top:8px;">Editable en ⚙️ Ajustes</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" id="pantallas-dias-title">🎮 Pantallas / PS5</div>
+        <div id="pantallas-dias-display" style="font-size:0.85rem;line-height:1.7;"></div>
+        <div style="font-size:0.78rem;color:var(--text2);margin-top:8px;">Editable en ⚙️ Ajustes</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💡 Ideas de Actividades Familiares</div>
+        <div id="actividades-list"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <input type="text" class="field-input" id="actividad-nueva" placeholder="Proponer actividad..." style="font-size:0.8rem;">
+          <button class="btn primary" onclick="agregarActividad()" style="white-space:nowrap;font-size:0.78rem;">➕</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================
+       TAB: TIENDA
+       ==================================================== -->
+  <div id="tab-tienda" class="tab-section" style="grid-column:1/-1">
+    <div class="section-title">🏆 Tienda de Recompensas</div>
+    <div class="alert-box info">
+      💡 Acumulás puntos completando misiones diarias. ¡Canjealos por premios reales!
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;">
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">💰 Tus Puntos Actuales</div>
+          <div style="font-size:2.5rem;font-weight:900;color:var(--accent1);text-align:center;" id="puntos-display">0</div>
+          <div style="text-align:center;color:var(--text2);font-size:0.8rem;">puntos acumulados</div>
+        </div>
+        <div class="card">
+          <div class="card-title">➕ Agregar Recompensa (adultos)</div>
+          <div class="field-group">
+            <label class="field-label">Nombre del premio</label>
+            <input type="text" class="field-input" id="premio-nombre" placeholder="Ej: Lego 150 piezas">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Costo en puntos</label>
+            <input type="number" class="field-input" id="premio-costo" min="1" value="50">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Ícono (emoji)</label>
+            <input type="text" class="field-input" id="premio-icono" value="🎁" maxlength="4">
+          </div>
+          <button class="btn primary" onclick="agregarPremio()">➕ Agregar premio</button>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">🎁 Premios disponibles</div>
+          <div id="tienda-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       TAB: ADULTOS
+       ==================================================== -->
+  <div id="tab-adultos" class="tab-section" style="grid-column:1/-1">
+    <div class="section-title">👤 Panel de Adultos</div>
+    <div class="adultos-grid">
+
+      <div class="card">
+        <div class="card-title">📊 Resumen Semanal</div>
+        <div class="reporte-semana" id="reporte-sem"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📈 Semáforos del Mes</div>
+        <div class="chart-wrap" id="chart-mes"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">😊 Emociones Frecuentes</div>
+        <div id="emociones-report"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================
+       TAB: AJUSTES
+       ==================================================== -->
+  <div id="tab-ajustes" class="tab-section" style="grid-column:1/-1">
+    <div class="section-title">⚙️ Ajustes</div>
+
+    <!-- Selector de tema -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title">🎨 Tema Visual</div>
+      <div id="theme-picker">
+        <button class="theme-btn active" data-theme="space" onclick="setTheme('space')">🚀 Espacio</button>
+        <button class="theme-btn" data-theme="lego" onclick="setTheme('lego')">🧱 Lego/Bloques</button>
+        <button class="theme-btn" data-theme="dinos" onclick="setTheme('dinos')">🦖 Dinosaurios</button>
+        <button class="theme-btn" data-theme="pixel" onclick="setTheme('pixel')">⚔️ Aventura Pixel</button>
+        <button class="theme-btn" data-theme="ocean" onclick="setTheme('ocean')">🌊 Océano</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;">
+
+      <div class="card">
+        <div class="card-title">📚 Metas de Lectura</div>
+        <div class="field-group">
+          <label class="field-label">Meta diaria de páginas</label>
+          <input type="number" class="field-input" id="meta-pag" min="1" value="10">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Libro actual</label>
+          <input type="text" class="field-input" id="libro-actual" placeholder="Título del libro">
+        </div>
+        <button class="btn primary" onclick="guardarMetas()">💾 Guardar</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⏱️ Tiempo de Estudio</div>
+        <div class="field-group">
+          <label class="field-label">Meta diaria de estudio (min)</label>
+          <input type="number" class="field-input" id="meta-estudio" min="10" value="60">
+        </div>
+        <button class="btn primary" onclick="guardarMetas()">💾 Guardar</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎮 Días con Pantallas</div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-bottom:8px;">Seleccioná los días permitidos:</div>
+        <div class="dias-grid" id="dias-pantallas-picker">
+          <button class="dia-toggle" data-dia="0" onclick="toggleDiaPantalla(this)">Dom</button>
+          <button class="dia-toggle" data-dia="1" onclick="toggleDiaPantalla(this)">Lun</button>
+          <button class="dia-toggle" data-dia="2" onclick="toggleDiaPantalla(this)">Mar</button>
+          <button class="dia-toggle" data-dia="3" onclick="toggleDiaPantalla(this)">Mié</button>
+          <button class="dia-toggle" data-dia="4" onclick="toggleDiaPantalla(this)">Jue</button>
+          <button class="dia-toggle" data-dia="5" onclick="toggleDiaPantalla(this)">Vie</button>
+          <button class="dia-toggle" data-dia="6" onclick="toggleDiaPantalla(this)">Sáb</button>
+        </div>
+        <button class="btn primary" style="margin-top:8px;" onclick="guardarMetas()">💾 Guardar</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎯 Puntos por acción (editable)</div>
+        <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;align-items:center;">
+          <label class="field-label" style="margin:0;">✅ Rutina completa</label>
+          <input type="number" class="field-input" id="xp-rutina" min="0" max="50" value="10" style="text-align:center;padding:5px;">
+          <label class="field-label" style="margin:0;">📚 Lectura (meta cumplida)</label>
+          <input type="number" class="field-input" id="xp-lectura" min="0" max="50" value="10" style="text-align:center;padding:5px;">
+          <label class="field-label" style="margin:0;">😊 Registro emocional</label>
+          <input type="number" class="field-input" id="xp-emocion" min="0" max="50" value="3" style="text-align:center;padding:5px;">
+          <label class="field-label" style="margin:0;">🤝 Plan de reparación</label>
+          <input type="number" class="field-input" id="xp-reparacion" min="0" max="50" value="5" style="text-align:center;padding:5px;">
+          <label class="field-label" style="margin:0;">🥋 Taekwondo asistido</label>
+          <input type="number" class="field-input" id="xp-taekwondo" min="0" max="50" value="5" style="text-align:center;padding:5px;">
+          <label class="field-label" style="margin:0;grid-column:1/-1;color:var(--text2);font-size:0.75rem;margin-top:4px;">📖 Conducta: se calcula automáticamente (0–10 XP según promedio de ratings)</label>
+        </div>
+        <button class="btn primary" style="width:100%;margin-top:12px;" onclick="guardarMetas()">💾 Guardar puntos</button>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-title">🎯 Actividades del Checklist Diario</div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:10px;">Estas son las tareas que aparecen en el panel de cada día. Podés agregar, editar o eliminar según lo que vaya cambiando durante el año.</div>
+      <div id="editor-actividades-fijas"></div>
+      <div style="display:grid;grid-template-columns:60px 1fr auto;gap:8px;margin-top:12px;align-items:center;">
+        <input type="text" class="field-input" id="nueva-af-ico" value="⭐" maxlength="4" style="text-align:center;font-size:1.2rem;padding:6px;">
+        <input type="text" class="field-input" id="nueva-af-nombre" placeholder="Nombre de la actividad...">
+        <button class="btn primary" onclick="agregarActividadFija()" style="white-space:nowrap;">➕ Agregar</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-title" style="color:var(--danger);">⚠️ Zona de Peligro</div>
+      <button class="btn danger" onclick="resetearTodo()">🗑️ Borrar todos los datos</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ============================================================
+     MODAL DÍA
+     ============================================================ -->
+<div id="modal-overlay" onclick="cerrarModal(event)">
+<div id="modal">
+  <button id="modal-close" onclick="cerrarModal(null,true)">✕</button>
+  <div class="modal-title" id="modal-fecha"></div>
+
+  <!-- Semáforo manual -->
+  <div class="sem-selector">
+    <label>🚦 Estado del día:</label>
+    <button class="sem-btn sem-none-btn" id="sem-none" onclick="setSemaforo('none')" title="Sin estado"></button>
+    <button class="sem-btn sem-green-btn" id="sem-green" onclick="setSemaforo('green')" title="Verde – ¡Gran día!"></button>
+    <button class="sem-btn sem-yellow-btn" id="sem-yellow" onclick="setSemaforo('yellow')" title="Amarillo – Más o menos"></button>
+    <button class="sem-btn sem-red-btn" id="sem-red" onclick="setSemaforo('red')" title="Rojo – Día difícil"></button>
+    <span id="sem-texto" style="font-size:0.8rem;color:var(--text2);margin-left:4px;"></span>
+  </div>
+
+  <!-- Tabs del día -->
+  <div class="modal-tabs">
+    <button class="modal-tab active" onclick="switchModalTab('rutina')">📘 Rutina</button>
+    <button class="modal-tab" onclick="switchModalTab('lectura')">📚 Lectura</button>
+    <button class="modal-tab" onclick="switchModalTab('conducta')">🤝 Conducta</button>
+    <button class="modal-tab" onclick="switchModalTab('emociones')">😊 Emociones</button>
+    <button class="modal-tab" onclick="switchModalTab('pantallas')">🎮 Pantallas</button>
+    <button class="modal-tab" onclick="switchModalTab('nota')">📝 Nota del día</button>
+  </div>
+
+  <!-- SECCIÓN: RUTINA -->
+  <div class="modal-section active" id="msec-rutina">
+    <div class="alert-box info">⏱️ Meta: <strong id="meta-estudio-label">60</strong> min de estudio/tareas hoy</div>
+    <div id="checklist-dinamico"></div>
+    <div class="field-group" style="margin-top:12px;">
+      <label class="field-label">⏱️ Tiempo de estudio (min)</label>
+      <input type="number" class="field-input" id="min-estudio" min="0" max="180" placeholder="0" oninput="actualizarProgresoEstudio()">
+      <div class="progress-wrap" style="margin-top:6px;">
+        <div class="progress-bg">
+          <div class="progress-fill" id="prog-estudio" style="width:0%;background:var(--accent2);"></div>
+        </div>
+        <div style="font-size:0.75rem;color:var(--text2);margin-top:3px;">
+          <span id="prog-estudio-pct">0%</span> de la meta de hoy
+        </div>
+      </div>
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:4px;" onclick="guardarDia()">💾 Guardar rutina</button>
+  </div>
+
+  <!-- SECCIÓN: LECTURA -->
+  <div class="modal-section" id="msec-lectura">
+    <div class="field-group">
+      <label class="field-label">📖 Libro que estás leyendo</label>
+      <input type="text" class="field-input" id="lectura-libro" placeholder="Título del libro" oninput="guardarDia()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">📄 Páginas leídas hoy</label>
+      <input type="number" class="field-input" id="lectura-pags" min="0" placeholder="0" oninput="actualizarProgresoLectura()">
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bg">
+        <div class="progress-fill" id="prog-lectura" style="width:0%;background:var(--success);"></div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text2);margin-top:3px;">
+        <span id="prog-lectura-pct">0%</span> de la meta diaria (<span id="meta-pag-label">10</span> págs)
+      </div>
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:10px;" onclick="guardarDia()">💾 Guardar lectura</button>
+  </div>
+
+  <!-- SECCIÓN: CONDUCTA -->
+  <div class="modal-section" id="msec-conducta">
+    <div style="margin-bottom:12px;">
+      <div class="rating-group" style="margin-bottom:8px;">
+        <span class="rating-label">🤝 Amable</span>
+        <div class="rating-stars" id="stars-amable" data-key="amable"></div>
+      </div>
+      <div class="rating-group" style="margin-bottom:8px;">
+        <span class="rating-label">🙏 Servicial</span>
+        <div class="rating-stars" id="stars-servicial" data-key="servicial"></div>
+      </div>
+      <div class="rating-group">
+        <span class="rating-label">🫡 Respetuoso</span>
+        <div class="rating-stars" id="stars-respetuoso" data-key="respetuoso"></div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿Hubo algún incidente hoy?</label>
+      <div style="display:flex;gap:10px;">
+        <button class="btn" id="inc-no" onclick="setIncidente(false)" style="flex:1;">👍 No, todo bien</button>
+        <button class="btn" id="inc-si" onclick="setIncidente(true)" style="flex:1;">⚠️ Sí, hubo algo</button>
+      </div>
+    </div>
+
+    <div id="incidente-detalle" style="display:none;">
+      <div class="field-group">
+        <label class="field-label">¿Qué pasó? (breve)</label>
+        <input type="text" class="field-input" id="inc-desc" placeholder="Describir brevemente..." oninput="guardarDia()">
+      </div>
+      <div class="plan-reparacion open">
+        <div class="plan-title">🛠️ Plan de reparación / aprendizaje</div>
+        <div class="field-group">
+          <label class="field-label">¿Qué pasó?</label>
+          <textarea class="field-textarea" id="plan-que" style="min-height:50px;" oninput="guardarDia()" placeholder="Describir lo que ocurrió..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">¿Qué sentí?</label>
+          <textarea class="field-textarea" id="plan-senti" style="min-height:50px;" oninput="guardarDia()" placeholder="¿Cómo me sentí en ese momento?"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">¿Qué haré diferente?</label>
+          <textarea class="field-textarea" id="plan-diferente" style="min-height:50px;" oninput="guardarDia()" placeholder="¿Cómo puedo hacerlo mejor la próxima vez?"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">¿Quién me va a apoyar?</label>
+          <input type="text" class="field-input" id="plan-apoyo" placeholder="Ej: Papá, Mamá, Profe..." oninput="guardarDia()">
+        </div>
+      </div>
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:8px;" onclick="guardarDia()">💾 Guardar conducta</button>
+  </div>
+
+  <!-- SECCIÓN: EMOCIONES -->
+  <div class="modal-section" id="msec-emociones">
+    <div class="field-group">
+      <label class="field-label">¿Cómo te sentiste hoy? (elegí la principal)</label>
+      <div class="emociones-grid" id="emociones-grid">
+        <button class="emocion-btn" data-em="😊" onclick="selEmocion(this)"><span style="font-size:1.8rem">😊</span><span>Contento</span></button>
+        <button class="emocion-btn" data-em="😢" onclick="selEmocion(this)"><span style="font-size:1.8rem">😢</span><span>Triste</span></button>
+        <button class="emocion-btn" data-em="😡" onclick="selEmocion(this)"><span style="font-size:1.8rem">😡</span><span>Enojado</span></button>
+        <button class="emocion-btn" data-em="😨" onclick="selEmocion(this)"><span style="font-size:1.8rem">😨</span><span>Asustado</span></button>
+        <button class="emocion-btn" data-em="😴" onclick="selEmocion(this)"><span style="font-size:1.8rem">😴</span><span>Cansado</span></button>
+        <button class="emocion-btn" data-em="🤩" onclick="selEmocion(this)"><span style="font-size:1.8rem">🤩</span><span>Emocionado</span></button>
+        <button class="emocion-btn" data-em="😐" onclick="selEmocion(this)"><span style="font-size:1.8rem">😐</span><span>Normal</span></button>
+        <button class="emocion-btn" data-em="🥰" onclick="selEmocion(this)"><span style="font-size:1.8rem">🥰</span><span>Querido</span></button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Intensidad: <span id="intensidad-val">3</span>/5</label>
+      <input type="range" id="em-intensidad" min="1" max="5" value="3" style="width:100%;accent-color:var(--accent1);" oninput="document.getElementById('intensidad-val').textContent=this.value;guardarDia();">
+    </div>
+    <div style="margin-top:12px;">
+      <button class="btn" onclick="toggleRespiracion()" style="width:100%;">🧘 Técnica de respiración 4-4-6</button>
+      <div class="respiracion-box" id="resp-box">
+        <div class="resp-step" id="resp-step">4</div>
+        <div class="resp-label" id="resp-label">Inhala contando hasta 4...</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+          <button class="btn primary" onclick="iniciarRespiracion()">▶ Iniciar</button>
+          <button class="btn" onclick="pararRespiracion()">⏹ Parar</button>
+        </div>
+        <div style="font-size:0.75rem;color:var(--text2);text-align:center;margin-top:6px;">Inhala (4s) → Retén (4s) → Exhala (6s)</div>
+      </div>
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:10px;" onclick="guardarDia()">💾 Guardar emoción</button>
+  </div>
+
+  <!-- SECCIÓN: PANTALLAS -->
+  <div class="modal-section" id="msec-pantallas">
+    <div id="pantallas-status" class="alert-box info" style="margin-bottom:12px;"></div>
+    <div class="field-group">
+      <label class="field-label">⏱️ Tiempo de pantalla hoy (min)</label>
+      <input type="number" class="field-input" id="pantallas-min" min="0" placeholder="0" oninput="guardarDia()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">¿Qué jugaste / viste?</label>
+      <input type="text" class="field-input" id="pantallas-desc" placeholder="Ej: PS5 – FIFA, YouTube..." oninput="guardarDia()">
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:8px;" onclick="guardarDia()">💾 Guardar pantallas</button>
+  </div>
+
+  <!-- SECCIÓN: NOTA DEL DÍA -->
+  <div class="modal-section" id="msec-nota">
+    <div class="field-group">
+      <label class="field-label">🏫 Hoy en el colegio me fue…</label>
+      <textarea class="field-textarea" id="nota-colegio" oninput="guardarDia()" placeholder="¿Cómo fue el día en el colegio?"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">🌟 Lo mejor del día fue…</label>
+      <input type="text" class="field-input" id="nota-mejor" oninput="guardarDia()" placeholder="¡El momento favorito!">
+    </div>
+    <div class="field-group">
+      <label class="field-label">💡 Mañana quiero mejorar…</label>
+      <input type="text" class="field-input" id="nota-mejorar" oninput="guardarDia()" placeholder="Una cosa pequeña para hacer mejor">
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:4px;" onclick="guardarDia()">💾 Guardar nota</button>
+  </div>
+
+</div><!-- /modal -->
+</div><!-- /modal-overlay -->
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ============================================================
+// ESTADO GLOBAL
+// ============================================================
+const YEAR = 2026;
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+               'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS_SEM = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const ASIGNATURAS = [
+  {n:'Lenguaje', i:'📖'},
+  {n:'Matemática', i:'🔢'},
+  {n:'Ciencias Naturales', i:'🔬'},
+  {n:'Historia y Geografía', i:'🗺️'},
+  {n:'Inglés', i:'🇬🇧'},
+  {n:'Educación Física', i:'⚽'},
+  {n:'Religión', i:'✝️'},
+  {n:'Orientación', i:'🧭'},
+  {n:'Tecnología', i:'💻'},
+];
+
+const LOGROS_DEF = [
+  {id:'racha3', ico:'🔥', nom:'Racha 3', desc:'3 días seguidos con datos'},
+  {id:'racha7', ico:'🌟', nom:'Racha 7', desc:'7 días seguidos con datos'},
+  {id:'racha30', ico:'🏆', nom:'Guerrero', desc:'30 días seguidos'},
+  {id:'lect7', ico:'📚', nom:'Lector', desc:'Lectura 7 días seguidos'},
+  {id:'verde10', ico:'💚', nom:'Semana verde', desc:'10 días verdes en el mes'},
+  {id:'xp100', ico:'⭐', nom:'100 XP', desc:'Acumulaste 100 XP'},
+  {id:'xp500', ico:'🚀', nom:'500 XP', desc:'Acumulaste 500 XP'},
+];
+
+let currentMes = new Date().getMonth(); // 0-11
+let currentDia = null; // fecha string YYYY-MM-DD
+
+// Datos cargados de localStorage
+let data = loadData();
+
+// ============================================================
+// PERSISTENCIA
+// ============================================================
+function loadData() {
+  try {
+    const raw = localStorage.getItem('mision2026_v2');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return {
+    dias: {},       // key: "2026-MM-DD" -> dayData
+    metas: {
+      metaPag: 10,
+      metaEstudio: 60,
+      libroActual: '',
+      diasPantallas: [0, 5, 6], // dom, vie, sab
+      xpRutina: 10,
+      xpLectura: 10,
+      xpEmocion: 3,
+      xpReparacion: 5,
+      xpTaekwondo: 5,
+    },
+    actividadesFijas: [
+      {id:'af1', ico:'📘', nombre:'Tareas del colegio hechas'},
+      {id:'af2', ico:'✅', nombre:'Rutina revisada con adulto'},
+      {id:'af3', ico:'🎒', nombre:'Mochila lista para mañana'},
+      {id:'af4', ico:'🌙', nombre:'A dormir a tiempo'},
+      {id:'af5', ico:'🥋', nombre:'Taekwondo (L/M/J)'},
+    ],
+    evaluaciones: [],
+    recompensas: [
+      {nom:'Salida especial', costo:100, ico:'🎉'},
+      {nom:'Lego pequeño', costo:150, ico:'🧱'},
+      {nom:'Rompecabezas', costo:80, ico:'🧩'},
+      {nom:'Juego de mesa', costo:120, ico:'🎲'},
+      {nom:'Comida favorita', costo:50, ico:'🍕'},
+    ],
+    canjes: [],
+    actividades: ['Armar rompecabezas 🧩','Juego de mesa 🎲','Paseo al parque 🌳','Cocinar juntos 🍳'],
+    logros: [],
+    xpTotal: 0,
+    tema: 'space',
+    puntosTotal: 0,
+  };
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('mision2026_v2', JSON.stringify(data));
+  } catch(e) {}
+}
+
+function getDayData(fecha) {
+  if (!data.dias[fecha]) {
+    data.dias[fecha] = {
+      semaforo: 'none',
+      checks: {},         // {actividadId: bool} — reemplaza campos fijos anteriores
+      minEstudio: 0,
+      lecLibo: '', lecPags: 0,
+      condAmable: 3, condServicial: 3, condRespetuoso: 3,
+      incidente: false, incDesc: '',
+      planQue: '', planSenti: '', planDiferente: '', planApoyo: '',
+      emocion: '', emIntensidad: 3,
+      pantallasMin: 0, pantallasDesc: '',
+      notaColegio: '', notaMejor: '', notaMejorar: '',
+      xp: 0, puntos: 0,
+      registrado: false,
+    };
+  }
+  // Migración de datos anteriores al formato checks
+  const dd = data.dias[fecha];
+  if (!dd.checks) {
+    dd.checks = {
+      af1: dd.tareas||false, af2: dd.rutina||false,
+      af3: dd.mochila||false, af4: dd.dormir||false, af5: dd.taekwondo||false
+    };
+  }
+  return dd;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Aplicar tema guardado
+  setTheme(data.tema || 'space', false);
+  
+  // Inicializar ajustes
+  document.getElementById('meta-pag').value = data.metas.metaPag || 10;
+  document.getElementById('meta-estudio').value = data.metas.metaEstudio || 60;
+  document.getElementById('libro-actual').value = data.metas.libroActual || '';
+  document.getElementById('xp-rutina').value = data.metas.xpRutina ?? 10;
+  document.getElementById('xp-lectura').value = data.metas.xpLectura ?? 10;
+  document.getElementById('xp-emocion').value = data.metas.xpEmocion ?? 3;
+  document.getElementById('xp-reparacion').value = data.metas.xpReparacion ?? 5;
+  document.getElementById('xp-taekwondo').value = data.metas.xpTaekwondo ?? 5;
+  
+  // Días de pantallas
+  updateDiasPantallasUI();
+  
+  renderCalendario();
+  renderSidebar();
+  renderPlanificador();
+  renderTienda();
+  renderActividades();
+  renderActividadesFijas();
+  renderAdultos();
+  initStars();
+  
+  // Inicializar rating stars
+  ['amable','servicial','respetuoso'].forEach(k => initRatingStars(k));
+});
+
+// ============================================================
+// CANVAS DE ESTRELLAS
+// ============================================================
+function initStars() {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({length:120}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      a: Math.random(),
+      speed: Math.random() * 0.005 + 0.002,
+    }));
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.speed;
+      const alpha = (Math.sin(s.a) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha * 0.8})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ============================================================
+// TEMA
+// ============================================================
+function setTheme(theme, save=true) {
+  document.body.className = theme === 'space' ? '' : `theme-${theme}`;
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === theme);
+  });
+  data.tema = theme;
+  // Mostrar/ocultar canvas estrellas
+  const canvas = document.getElementById('bg-canvas');
+  canvas.style.display = (theme === 'space') ? 'block' : 'none';
+  if (save) saveData();
+}
+
+// ============================================================
+// CAMBIO DE MES
+// ============================================================
+function changeMonth(delta) {
+  currentMes = Math.max(0, Math.min(11, currentMes + delta));
+  renderCalendario();
+  renderSidebar();
+  renderAdultos();
+  document.getElementById('mes-label').textContent = MESES[currentMes] + ' 2026';
+}
+
+// ============================================================
+// RENDER CALENDARIO
+// ============================================================
+function renderCalendario() {
+  document.getElementById('mes-label').textContent = MESES[currentMes] + ' 2026';
+  document.getElementById('cal-title').innerHTML = `📅 ${MESES[currentMes]} ${YEAR}`;
+  
+  const cal = document.getElementById('calendar');
+  cal.innerHTML = '';
+  
+  // Headers días
+  DIAS_SEM.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-header-day';
+    h.textContent = d;
+    cal.appendChild(h);
+  });
+  
+  const primerDia = new Date(YEAR, currentMes, 1).getDay(); // 0=dom
+  const diasMes = new Date(YEAR, currentMes + 1, 0).getDate();
+  const hoy = new Date();
+  
+  // Celdas vacías al inicio
+  for (let i = 0; i < primerDia; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    cal.appendChild(empty);
+  }
+  
+  for (let d = 1; d <= diasMes; d++) {
+    const fecha = `${YEAR}-${String(currentMes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dd = data.dias[fecha];
+    const diaSem = new Date(YEAR, currentMes, d).getDay();
+    
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    
+    // Hoy
+    if (hoy.getFullYear() === YEAR && hoy.getMonth() === currentMes && hoy.getDate() === d) {
+      cell.classList.add('today');
+    }
+    
+    // Semáforo
+    const sem = dd ? dd.semaforo : 'none';
+    if (sem && sem !== 'none') cell.classList.add('sem-' + sem);
+    
+    let html = `<div class="cal-day-num">${d}</div>`;
+    
+    // Mini iconos
+    let icons = '';
+    if (dd) {
+      if (dd.tareas) icons += '📘';
+      if (dd.lecPags > 0) icons += '📚';
+      if (dd.minEstudio > 0) icons += '🧠';
+      if (dd.pantallasMin > 0) icons += '🎮';
+      if (dd.emocion) icons += dd.emocion;
+    }
+    if (icons) html += `<div class="cal-day-icons">${icons}</div>`;
+    
+    // Punto semáforo
+    if (sem && sem !== 'none') {
+      html += `<div style="margin-top:auto;"><span class="sem-dot ${sem}"></span></div>`;
+    }
+    
+    
+    cell.innerHTML = html;
+    cell.onclick = () => abrirDia(fecha, d, diaSem);
+    cal.appendChild(cell);
+  }
+}
+
+// ============================================================
+// RENDER SIDEBAR
+// ============================================================
+function renderSidebar() {
+  // XP / Nivel
+  const xpTotal = calcXPTotal();
+  const nivel = calcNivel(xpTotal);
+  const xpParaNivel = nivel * 100;
+  const xpEnNivel = xpTotal - ((nivel-1)*100);
+  const pct = Math.min(100, Math.round(xpEnNivel / 100 * 100));
+  
+  document.getElementById('sb-nivel').textContent = nivel;
+  document.getElementById('sb-xp-total').textContent = xpTotal + ' XP';
+  document.getElementById('xp-bar').style.width = pct + '%';
+  document.getElementById('xp-lvl-cur').textContent = nivel;
+  document.getElementById('xp-next').textContent = `${100-xpEnNivel} XP para nivel ${nivel+1}`;
+  
+  const racha = calcRacha();
+  document.getElementById('sb-racha').textContent = racha;
+  document.getElementById('hdr-racha').textContent = racha;
+  document.getElementById('hdr-xp').textContent = calcXPSemana();
+  document.getElementById('hdr-pct').textContent = calcPctSemana() + '%';
+  
+  const hdrNivel = document.getElementById('hdr-nivel');
+  hdrNivel.innerHTML = `🏅 Nivel <span class="val">${nivel}</span>`;
+  
+  const pctVerdesMes = calcPctVerdesMes();
+  document.getElementById('sb-pct-mes').textContent = pctVerdesMes + '%';
+  
+  // Misiones
+  renderMisiones();
+  
+  // Logros
+  renderLogros();
+  
+  // Puntos
+  const puntos = calcPuntosTotal();
+  document.getElementById('puntos-display').textContent = puntos;
+  data.puntosTotal = puntos;
+}
+
+function calcXPTotal() {
+  return Object.values(data.dias).reduce((acc, d) => acc + (d.xp || 0), 0);
+}
+
+function calcPuntosTotal() {
+  const ganados = Object.values(data.dias).reduce((acc,d) => acc + (d.puntos||0), 0);
+  const canjeados = data.canjes.reduce((acc,c) => acc + (c.costo||0), 0);
+  return Math.max(0, ganados - canjeados);
+}
+
+function calcNivel(xp) {
+  return Math.floor(xp / 100) + 1;
+}
+
+function calcRacha() {
+  let racha = 0;
+  const hoy = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(hoy);
+    d.setDate(hoy.getDate() - i);
+    if (d.getFullYear() !== YEAR) break;
+    const key = fechaKey(d);
+    const dd = data.dias[key];
+    if (dd && dd.registrado) racha++;
+    else break;
+  }
+  return racha;
+}
+
+function calcXPSemana() {
+  const hoy = new Date();
+  const inicioSem = new Date(hoy);
+  inicioSem.setDate(hoy.getDate() - hoy.getDay());
+  let xp = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSem);
+    d.setDate(inicioSem.getDate() + i);
+    const key = fechaKey(d);
+    if (data.dias[key]) xp += data.dias[key].xp || 0;
+  }
+  return xp;
+}
+
+function calcPctSemana() {
+  const hoy = new Date();
+  const inicioSem = new Date(hoy);
+  inicioSem.setDate(hoy.getDate() - hoy.getDay());
+  let verdes = 0, total = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSem);
+    d.setDate(inicioSem.getDate() + i);
+    if (d > hoy) break;
+    total++;
+    const key = fechaKey(d);
+    if (data.dias[key] && data.dias[key].semaforo === 'green') verdes++;
+  }
+  return total ? Math.round(verdes/total*100) : 0;
+}
+
+function calcPctVerdesMes() {
+  const diasMes = new Date(YEAR, currentMes + 1, 0).getDate();
+  let verdes = 0, registrados = 0;
+  for (let d = 1; d <= diasMes; d++) {
+    const key = `${YEAR}-${String(currentMes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if (data.dias[key]) {
+      registrados++;
+      if (data.dias[key].semaforo === 'green') verdes++;
+    }
+  }
+  return registrados ? Math.round(verdes/registrados*100) : 0;
+}
+
+function fechaKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ============================================================
+// MISIONES
+// ============================================================
+function renderMisiones() {
+  const cont = document.getElementById('misiones-container');
+  cont.innerHTML = '';
+  
+  const misiones = getMisionesSemanales();
+  misiones.forEach(m => {
+    const pct = Math.min(100, Math.round(m.actual / m.meta * 100));
+    const div = document.createElement('div');
+    div.className = 'mision-item' + (m.completada ? ' done' : '');
+    div.innerHTML = `
+      <span class="mision-icon">${m.icono}</span>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:0.82rem;">${m.nombre}</div>
+        <div style="font-size:0.75rem;color:var(--text2);">${m.actual}/${m.meta}</div>
+        <div class="mision-progress"><div class="mision-progress-fill" style="width:${pct}%;${m.completada?'background:var(--success)':''}"></div></div>
+      </div>
+      ${m.completada ? '<span style="color:var(--success);font-size:1rem;">✅</span>' : ''}
+    `;
+    cont.appendChild(div);
+  });
+}
+
+function getMisionesSemanales() {
+  const hoy = new Date();
+  const inicioSem = new Date(hoy);
+  inicioSem.setDate(hoy.getDate() - hoy.getDay());
+  
+  let diasVerdes = 0, diasLectura = 0, maxPrep = 0;
+  let diasRegistrados = 0;
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSem);
+    d.setDate(inicioSem.getDate() + i);
+    const key = fechaKey(d);
+    const dd = data.dias[key];
+    if (dd) {
+      if (dd.semaforo === 'green') diasVerdes++;
+      if (dd.lecPags > 0) diasLectura++;
+      if (dd.registrado) diasRegistrados++;
+    }
+  }
+  
+  const maxEvalPrep = data.evaluaciones.length > 0 ?
+    Math.max(...data.evaluaciones.map(e => e.prep||0)) : 0;
+  
+  return [
+    { icono:'💚', nombre:'3 días verdes seguidos', meta:3, actual:diasVerdes, completada: diasVerdes >= 3 },
+    { icono:'📚', nombre:'Leer 5 días esta semana', meta:5, actual:diasLectura, completada: diasLectura >= 5 },
+    { icono:'📝', nombre:'Preparar prueba al 70%', meta:70, actual:maxEvalPrep, completada: maxEvalPrep >= 70 },
+    { icono:'📅', nombre:'Registrar 5 días', meta:5, actual:diasRegistrados, completada: diasRegistrados >= 5 },
+  ];
+}
+
+// ============================================================
+// LOGROS
+// ============================================================
+function renderLogros() {
+  const cont = document.getElementById('logros-container');
+  cont.innerHTML = '';
+  
+  const racha = calcRacha();
+  const xpTotal = calcXPTotal();
+  
+  // Evaluar logros
+  const activos = {
+    racha3: racha >= 3,
+    racha7: racha >= 7,
+    racha30: racha >= 30,
+    xp100: xpTotal >= 100,
+    xp500: xpTotal >= 500,
+    verde10: calcPctVerdesMes() >= 10,
+  };
+  
+  LOGROS_DEF.forEach(l => {
+    const desbloqueado = activos[l.id];
+    if (!data.logros.includes(l.id) && desbloqueado) {
+      data.logros.push(l.id);
+      saveData();
+      confetti();
+    }
+    const badge = document.createElement('div');
+    badge.title = l.nom + ': ' + l.desc;
+    badge.style.cssText = `background:${desbloqueado ? 'var(--card2)' : 'var(--bg3)'};
+      border:2px solid ${desbloqueado ? 'var(--accent1)' : 'var(--border)'};
+      border-radius:10px;padding:6px 10px;font-size:0.78rem;font-weight:700;
+      color:${desbloqueado ? 'var(--accent1)' : 'var(--text2)'};
+      display:flex;align-items:center;gap:5px;cursor:default;`;
+    badge.innerHTML = `${l.ico} ${l.nom}`;
+    cont.appendChild(badge);
+  });
+}
+
+// ============================================================
+// ABRIR DÍA (MODAL)
+// ============================================================
+function abrirDia(fecha, d, diaSem) {
+  currentDia = fecha;
+  const dd = getDayData(fecha);
+  const diaSemNom = DIAS_SEM[diaSem];
+  
+  document.getElementById('modal-fecha').innerHTML =
+    `${diaSemNom} ${d} de ${MESES[currentMes]} 2026`;
+  
+  // Semáforo
+  updateSemaforoUI(dd.semaforo || 'none');
+  
+  // Renderizar checklist dinámico
+  renderChecklistModal(dd);
+  
+  document.getElementById('min-estudio').value = dd.minEstudio || 0;
+  document.getElementById('meta-estudio-label').textContent = data.metas.metaEstudio || 60;
+  actualizarProgresoEstudio();
+  
+  document.getElementById('lectura-libro').value = dd.lecLibo || data.metas.libroActual || '';
+  document.getElementById('lectura-pags').value = dd.lecPags || 0;
+  document.getElementById('meta-pag-label').textContent = data.metas.metaPag || 10;
+  actualizarProgresoLectura();
+  
+  // Rating conducta
+  setRating('amable', dd.condAmable || 3);
+  setRating('servicial', dd.condServicial || 3);
+  setRating('respetuoso', dd.condRespetuoso || 3);
+  
+  setIncidenteUI(dd.incidente || false);
+  document.getElementById('inc-desc').value = dd.incDesc || '';
+  document.getElementById('plan-que').value = dd.planQue || '';
+  document.getElementById('plan-senti').value = dd.planSenti || '';
+  document.getElementById('plan-diferente').value = dd.planDiferente || '';
+  document.getElementById('plan-apoyo').value = dd.planApoyo || '';
+  
+  // Emoción
+  document.querySelectorAll('.emocion-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.em === dd.emocion);
+  });
+  document.getElementById('em-intensidad').value = dd.emIntensidad || 3;
+  document.getElementById('intensidad-val').textContent = dd.emIntensidad || 3;
+  
+  // Pantallas
+  const diasPerm = data.metas.diasPantallas || [0,5,6];
+  const esPerm = diasPerm.includes(diaSem);
+  document.getElementById('pantallas-status').innerHTML = esPerm
+    ? '✅ Hoy es día permitido de pantallas 🎮'
+    : '⚠️ Hoy no está programado para pantallas. ¿Hablaron en familia? Se puede conversar 😊';
+  document.getElementById('pantallas-status').className = 'alert-box ' + (esPerm ? 'success' : 'warn');
+  document.getElementById('pantallas-min').value = dd.pantallasMin || 0;
+  document.getElementById('pantallas-desc').value = dd.pantallasDesc || '';
+  
+  // Nota
+  document.getElementById('nota-colegio').value = dd.notaColegio || '';
+  document.getElementById('nota-mejor').value = dd.notaMejor || '';
+  document.getElementById('nota-mejorar').value = dd.notaMejorar || '';
+  
+  // Mostrar primer tab
+  switchModalTab('rutina');
+  
+  // Abrir modal
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function cerrarModal(evt, force=false) {
+  if (force || (evt && evt.target.id === 'modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+    currentDia = null;
+    pararRespiracion();
+  }
+}
+
+// ============================================================
+// SEMÁFORO MANUAL
+// ============================================================
+function setSemaforo(color) {
+  if (!currentDia) return;
+  const dd = getDayData(currentDia);
+  dd.semaforo = color;
+  updateSemaforoUI(color);
+  guardarDia();
+}
+
+function updateSemaforoUI(color) {
+  ['none','green','yellow','red'].forEach(c => {
+    const btn = document.getElementById('sem-' + c);
+    if (btn) btn.classList.toggle('selected', c === color);
+  });
+  const textos = {
+    none: '', green: '¡Gran día! 🌟', yellow: 'Más o menos 🌤️', red: 'Día difícil 💪'
+  };
+  document.getElementById('sem-texto').textContent = textos[color] || '';
+}
+
+// ============================================================
+// GUARDAR DÍA
+// ============================================================
+function guardarDia() {
+  if (!currentDia) return;
+  const dd = getDayData(currentDia);
+  
+  // Leer checkboxes dinámicos
+  dd.checks = dd.checks || {};
+  (data.metas.actividadesFijas || []).forEach(af => {
+    const el = document.getElementById('ch-' + af.id);
+    if (el) dd.checks[af.id] = el.checked;
+  });
+  dd.minEstudio = parseInt(document.getElementById('min-estudio').value) || 0;
+  
+  dd.lecLibo = document.getElementById('lectura-libro').value;
+  dd.lecPags = parseInt(document.getElementById('lectura-pags').value) || 0;
+  
+  dd.condAmable = getRating('amable');
+  dd.condServicial = getRating('servicial');
+  dd.condRespetuoso = getRating('respetuoso');
+  dd.incidente = !!document.getElementById('incidente-detalle').style.display && document.getElementById('incidente-detalle').style.display !== 'none';
+  dd.incDesc = document.getElementById('inc-desc').value;
+  dd.planQue = document.getElementById('plan-que').value;
+  dd.planSenti = document.getElementById('plan-senti').value;
+  dd.planDiferente = document.getElementById('plan-diferente').value;
+  dd.planApoyo = document.getElementById('plan-apoyo').value;
+  
+  const emSel = document.querySelector('.emocion-btn.selected');
+  dd.emocion = emSel ? emSel.dataset.em : '';
+  dd.emIntensidad = parseInt(document.getElementById('em-intensidad').value) || 3;
+  
+  dd.pantallasMin = parseInt(document.getElementById('pantallas-min').value) || 0;
+  dd.pantallasDesc = document.getElementById('pantallas-desc').value;
+  
+  dd.notaColegio = document.getElementById('nota-colegio').value;
+  dd.notaMejor = document.getElementById('nota-mejor').value;
+  dd.notaMejorar = document.getElementById('nota-mejorar').value;
+  
+  dd.registrado = true;
+  
+  // Calcular XP y puntos
+  const xpAnterior = dd.xp || 0;
+  let xp = 0, puntos = 0;
+  const metaEst = data.metas.metaEstudio || 60;
+  if (dd.minEstudio >= metaEst) { const v = data.metas.xpRutina||10; xp += v; puntos += v; }
+  const metaPag = data.metas.metaPag || 10;
+  if (dd.lecPags >= metaPag) { const v = data.metas.xpLectura||10; xp += v; puntos += v; }
+  if (dd.emocion) { const v = data.metas.xpEmocion||3; xp += v; puntos += v; }
+  if (dd.incidente && dd.planQue) { const v = data.metas.xpReparacion||5; xp += v; puntos += v; }
+  // XP Taekwondo: cualquier actividad cuyo nombre contenga "taekwondo" (case insensitive) y esté marcada
+  const afTkd = (data.metas.actividadesFijas||[]).find(a => a.nombre.toLowerCase().includes('taekwondo'));
+  if (afTkd && dd.checks && dd.checks[afTkd.id]) { const v = data.metas.xpTaekwondo||5; xp += v; puntos += v; }
+  const condProm = ((dd.condAmable||3) + (dd.condServicial||3) + (dd.condRespetuoso||3)) / 3;
+  const condXP = Math.round((condProm / 5) * 10);
+  xp += condXP; puntos += condXP;
+  
+  dd.xp = xp;
+  dd.puntos = puntos;
+  
+  // Mostrar XP si aumentó
+  if (xp > xpAnterior) showXPPopup('+' + (xp - xpAnterior) + ' XP');
+  
+  saveData();
+  renderCalendario();
+  renderSidebar();
+  
+  // Actualizar puntos en tienda
+  const puntosEl = document.getElementById('puntos-display');
+  if (puntosEl) puntosEl.textContent = calcPuntosTotal();
+}
+
+// ============================================================
+// TABS MODAL
+// ============================================================
+function switchModalTab(tab) {
+  document.querySelectorAll('.modal-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('msec-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ============================================================
+// TABS PRINCIPALES
+// ============================================================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  
+  // Ocultar todo
+  const calSec = document.getElementById('cal-section');
+  const sidebarEl = document.getElementById('sidebar');
+  
+  // Cal y sidebar solo en calendario
+  const isCalendario = tab === 'calendario';
+  calSec.style.display = isCalendario ? '' : 'none';
+  sidebarEl.style.display = isCalendario ? '' : 'none';
+  
+  const tabIds = ['planificador','rutinas','tienda','adultos','ajustes'];
+  tabIds.forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = (t === tab) ? 'block' : 'none';
+  });
+  
+  if (tab === 'adultos') renderAdultos();
+  if (tab === 'tienda') {
+    document.getElementById('puntos-display').textContent = calcPuntosTotal();
+    renderTienda();
+  }
+  if (tab === 'rutinas') { renderActividades(); renderActividadesFijas(); }
+  if (tab === 'ajustes') { updateDiasPantallasUI(); renderActividadesFijas(); }
+}
+
+// ============================================================
+// RATING STARS
+// ============================================================
+function initRatingStars(key) {
+  const cont = document.getElementById('stars-' + key);
+  cont.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement('button');
+    s.className = 'rating-star';
+    s.textContent = i;
+    s.dataset.val = i;
+    s.onclick = () => { setRating(key, i); guardarDia(); };
+    cont.appendChild(s);
+  }
+}
+
+function setRating(key, val) {
+  const cont = document.getElementById('stars-' + key);
+  if (!cont) return;
+  cont.querySelectorAll('.rating-star').forEach(s => {
+    s.classList.toggle('on', parseInt(s.dataset.val) <= val);
+  });
+  cont.dataset.val = val;
+}
+
+function getRating(key) {
+  const cont = document.getElementById('stars-' + key);
+  return cont ? parseInt(cont.dataset.val) || 3 : 3;
+}
+
+// ============================================================
+// INCIDENTE
+// ============================================================
+function setIncidente(val) {
+  setIncidenteUI(val);
+  guardarDia();
+}
+
+function setIncidenteUI(val) {
+  document.getElementById('incidente-detalle').style.display = val ? 'block' : 'none';
+  document.getElementById('inc-no').style.borderColor = val ? '' : 'var(--success)';
+  document.getElementById('inc-si').style.borderColor = val ? 'var(--warn)' : '';
+}
+
+// ============================================================
+// EMOCIÓN
+// ============================================================
+function selEmocion(btn) {
+  document.querySelectorAll('.emocion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  guardarDia();
+}
+
+// ============================================================
+// RESPIRACIÓN
+// ============================================================
+let respTimer = null;
+let respFase = 0;
+const FASES = [
+  {txt:'Inhala...', dur:4000, emoji:'🫁'},
+  {txt:'Retén...', dur:4000, emoji:'⏸️'},
+  {txt:'Exhala lentamente...', dur:6000, emoji:'💨'},
+];
+
+function toggleRespiracion() {
+  const box = document.getElementById('resp-box');
+  box.classList.toggle('open');
+}
+
+function iniciarRespiracion() {
+  pararRespiracion();
+  respFase = 0;
+  correrFase();
+}
+
+function correrFase() {
+  const f = FASES[respFase % 3];
+  document.getElementById('resp-step').textContent = f.emoji;
+  document.getElementById('resp-label').textContent = f.txt;
+  respTimer = setTimeout(() => {
+    respFase++;
+    correrFase();
+  }, f.dur);
+}
+
+function pararRespiracion() {
+  if (respTimer) clearTimeout(respTimer);
+  respTimer = null;
+  document.getElementById('resp-step').textContent = '4';
+  document.getElementById('resp-label').textContent = 'Presioná Iniciar para comenzar';
+}
+
+// ============================================================
+// PROGRESO
+// ============================================================
+function actualizarProgresoEstudio() {
+  const val = parseInt(document.getElementById('min-estudio').value) || 0;
+  const meta = parseInt(data.metas.metaEstudio) || 60;
+  const pct = Math.min(100, Math.round(val/meta*100));
+  document.getElementById('prog-estudio').style.width = pct + '%';
+  document.getElementById('prog-estudio').style.background = pct >= 100 ? 'var(--success)' : 'var(--accent2)';
+  document.getElementById('prog-estudio-pct').textContent = pct + '%';
+}
+
+function actualizarProgresoLectura() {
+  const val = parseInt(document.getElementById('lectura-pags').value) || 0;
+  const meta = parseInt(data.metas.metaPag) || 10;
+  const pct = Math.min(100, Math.round(val/meta*100));
+  document.getElementById('prog-lectura').style.width = pct + '%';
+  document.getElementById('prog-lectura').style.background = pct >= 100 ? 'var(--success)' : 'var(--accent2)';
+  document.getElementById('prog-lectura-pct').textContent = pct + '%';
+}
+
+// ============================================================
+// PLANIFICADOR
+// ============================================================
+function renderPlanificador() {
+  // Asignaturas
+  const grid = document.getElementById('asig-grid');
+  grid.innerHTML = '';
+  ASIGNATURAS.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'asig-card';
+    const evals = data.evaluaciones.filter(e => e.asig === a.n);
+    const proxEval = evals.find(e => new Date(e.fecha) >= new Date());
+    card.innerHTML = `
+      <div class="asig-icon">${a.i}</div>
+      <div class="asig-nombre">${a.n}</div>
+      <div class="asig-meta">${evals.length} eval${evals.length!==1?'s':''}</div>
+      ${proxEval ? `<div style="font-size:0.7rem;color:var(--warn);margin-top:2px;">📅 ${proxEval.fecha}</div>` : ''}
+    `;
+    grid.appendChild(card);
+  });
+  
+  // Lista evaluaciones
+  renderEvals();
+}
+
+function renderEvals() {
+  const list = document.getElementById('eval-list');
+  list.innerHTML = '';
+  if (!data.evaluaciones.length) {
+    list.innerHTML = '<p style="color:var(--text2);font-size:0.85rem;padding:10px;">No hay evaluaciones registradas aún.</p>';
+    return;
+  }
+  const sorted = [...data.evaluaciones].sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
+  sorted.forEach((e, i) => {
+    const prepColor = e.prep >= 70 ? 'var(--success)' : e.prep >= 40 ? 'var(--warn)' : 'var(--danger)';
+    const div = document.createElement('div');
+    div.className = 'eval-item';
+    div.innerHTML = `
+      <span class="eval-fecha">📅 ${e.fecha}</span>
+      <span class="eval-asig">${e.asig}</span>
+      <span class="eval-tema">${e.tema || '—'}</span>
+      <span class="eval-prep" style="color:${prepColor};">🎯 ${e.prep||0}%</span>
+      <input type="range" min="0" max="100" value="${e.prep||0}" style="width:80px;accent-color:${prepColor};"
+        oninput="this.nextSibling.textContent=this.value+'%';updateEvalPrep(${i},parseInt(this.value))">
+      <span style="font-size:0.75rem;min-width:35px;">${e.prep||0}%</span>
+      <button class="btn" onclick="eliminarEval(${i})" style="padding:4px 8px;font-size:0.75rem;color:var(--danger);border-color:var(--danger);">🗑️</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function agregarEval() {
+  const asig = document.getElementById('eval-asig').value;
+  const fecha = document.getElementById('eval-fecha').value;
+  const tema = document.getElementById('eval-tema').value;
+  const prep = parseInt(document.getElementById('eval-prep').value) || 0;
+  if (!fecha) { alert('Seleccioná una fecha'); return; }
+  data.evaluaciones.push({asig, fecha, tema, prep});
+  saveData();
+  renderEvals();
+  renderPlanificador();
+  document.getElementById('eval-tema').value = '';
+  document.getElementById('eval-fecha').value = '';
+  document.getElementById('eval-prep').value = 0;
+}
+
+function updateEvalPrep(idx, val) {
+  data.evaluaciones[idx].prep = val;
+  saveData();
+}
+
+function eliminarEval(idx) {
+  if (confirm('¿Eliminar esta evaluación?')) {
+    data.evaluaciones.splice(idx, 1);
+    saveData();
+    renderEvals();
+    renderPlanificador();
+  }
+}
+
+// ============================================================
+// TIENDA
+// ============================================================
+function renderTienda() {
+  const list = document.getElementById('tienda-list');
+  list.innerHTML = '';
+  if (!data.recompensas.length) {
+    list.innerHTML = '<p style="color:var(--text2);font-size:0.85rem;">Aún no hay premios. ¡Agregá uno arriba!</p>';
+    return;
+  }
+  data.recompensas.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'tienda-item';
+    div.innerHTML = `
+      <span style="font-size:1.5rem;">${r.ico||'🎁'}</span>
+      <span class="tienda-nombre">${r.nom}</span>
+      <span class="tienda-costo">⭐ ${r.costo}</span>
+      <button class="btn primary" onclick="canjearPremio(${i})" style="font-size:0.75rem;padding:5px 10px;">Canjear</button>
+      <button class="btn" onclick="eliminarPremio(${i})" style="font-size:0.75rem;padding:5px 8px;color:var(--danger);">🗑️</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function agregarPremio() {
+  const nom = document.getElementById('premio-nombre').value.trim();
+  const costo = parseInt(document.getElementById('premio-costo').value) || 50;
+  const ico = document.getElementById('premio-icono').value || '🎁';
+  if (!nom) { alert('Ingresá un nombre para el premio'); return; }
+  data.recompensas.push({nom, costo, ico});
+  saveData();
+  renderTienda();
+  document.getElementById('premio-nombre').value = '';
+}
+
+function eliminarPremio(i) {
+  if (confirm('¿Eliminar este premio?')) {
+    data.recompensas.splice(i, 1);
+    saveData();
+    renderTienda();
+  }
+}
+
+function canjearPremio(i) {
+  const puntos = calcPuntosTotal();
+  const r = data.recompensas[i];
+  if (puntos < r.costo) {
+    alert(`¡Necesitás ${r.costo} puntos pero tenés ${puntos}! Seguí acumulando 💪`);
+    return;
+  }
+  if (confirm(`¿Canjear "${r.nom}" por ${r.costo} puntos?`)) {
+    data.canjes.push({premio:r.nom, costo:r.costo, fecha:new Date().toISOString()});
+    saveData();
+    confetti();
+    document.getElementById('puntos-display').textContent = calcPuntosTotal();
+    alert(`🎉 ¡Canje exitoso! Disfrutá tu premio: ${r.ico} ${r.nom}`);
+  }
+}
+
+// ============================================================
+// ACTIVIDADES
+// ============================================================
+function renderActividades() {
+  const list = document.getElementById('actividades-list');
+  if (!list) return;
+  list.innerHTML = '';
+  (data.actividades || []).forEach((a, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.82rem;';
+    div.innerHTML = `<span>${a}</span><button class="btn" onclick="eliminarActividad(${i})" style="padding:3px 8px;font-size:0.72rem;color:var(--danger);">✕</button>`;
+    list.appendChild(div);
+  });
+}
+
+function agregarActividad() {
+  const input = document.getElementById('actividad-nueva');
+  const val = input.value.trim();
+  if (!val) return;
+  data.actividades.push(val);
+  saveData();
+  renderActividades();
+  input.value = '';
+}
+
+function eliminarActividad(i) {
+  data.actividades.splice(i, 1);
+  saveData();
+  renderActividades();
+}
+
+// ============================================================
+// ACTIVIDADES FIJAS (CHECKLIST DIARIO)
+// ============================================================
+function getActividadesFijas() {
+  if (!data.metas.actividadesFijas) {
+    data.metas.actividadesFijas = [
+      {id:'af1', ico:'📘', nombre:'Tareas del colegio hechas'},
+      {id:'af2', ico:'✅', nombre:'Rutina revisada con adulto'},
+      {id:'af3', ico:'🎒', nombre:'Mochila lista para mañana'},
+      {id:'af4', ico:'🌙', nombre:'A dormir a tiempo'},
+      {id:'af5', ico:'🥋', nombre:'Taekwondo (L/M/J)'},
+    ];
+  }
+  return data.metas.actividadesFijas;
+}
+
+function renderChecklistModal(dd) {
+  const cont = document.getElementById('checklist-dinamico');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const afs = getActividadesFijas();
+  if (!afs.length) {
+    cont.innerHTML = '<p style="color:var(--text2);font-size:0.82rem;padding:8px 0;">Sin actividades configuradas. Agregá desde ⚙️ Ajustes.</p>';
+    return;
+  }
+  afs.forEach(af => {
+    const checked = (dd.checks || {})[af.id] || false;
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.innerHTML = `
+      <input type="checkbox" id="ch-${af.id}" ${checked ? 'checked' : ''} onchange="guardarDia()">
+      <span class="item-icon">${af.ico}</span>
+      <span class="item-label">${af.nombre}</span>
+    `;
+    div.onclick = (e) => { if (e.target.tagName !== 'INPUT') { const cb = div.querySelector('input'); cb.checked = !cb.checked; guardarDia(); } };
+    cont.appendChild(div);
+  });
+}
+
+function renderActividadesFijas() {
+  // Render in Rutinas tab
+  const disp = document.getElementById('rutinas-actividades-display');
+  if (disp) {
+    disp.innerHTML = '';
+    getActividadesFijas().forEach(af => {
+      const div = document.createElement('div');
+      div.className = 'rutina-item';
+      div.innerHTML = `<span style="font-size:1rem;">${af.ico}</span><span>${af.nombre}</span>`;
+      disp.appendChild(div);
+    });
+    if (!getActividadesFijas().length) {
+      disp.innerHTML = '<p style="color:var(--text2);font-size:0.82rem;">Sin actividades. Agregá desde ⚙️ Ajustes.</p>';
+    }
+  }
+  // Render editor in Ajustes
+  const editor = document.getElementById('editor-actividades-fijas');
+  if (!editor) return;
+  editor.innerHTML = '';
+  getActividadesFijas().forEach((af, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:60px 1fr auto auto;gap:8px;align-items:center;margin-bottom:8px;';
+    div.innerHTML = `
+      <input type="text" class="field-input" value="${af.ico}" maxlength="4"
+        style="text-align:center;font-size:1.1rem;padding:5px;"
+        onchange="editarAF(${i},'ico',this.value)">
+      <input type="text" class="field-input" value="${af.nombre}" style="font-size:0.85rem;"
+        onchange="editarAF(${i},'nombre',this.value)">
+      <button class="btn" onclick="moverAF(${i},-1)" title="Subir" style="padding:5px 8px;">↑</button>
+      <button class="btn" onclick="eliminarAF(${i})" title="Eliminar"
+        style="padding:5px 8px;color:var(--danger);border-color:var(--danger);">🗑️</button>
+    `;
+    editor.appendChild(div);
+  });
+}
+
+function editarAF(i, campo, valor) {
+  getActividadesFijas()[i][campo] = valor;
+  saveData();
+  renderActividadesFijas();
+}
+
+function eliminarAF(i) {
+  if (confirm('¿Eliminar esta actividad del checklist?')) {
+    getActividadesFijas().splice(i, 1);
+    saveData();
+    renderActividadesFijas();
+  }
+}
+
+function moverAF(i, dir) {
+  const afs = getActividadesFijas();
+  const j = i + dir;
+  if (j < 0 || j >= afs.length) return;
+  [afs[i], afs[j]] = [afs[j], afs[i]];
+  saveData();
+  renderActividadesFijas();
+}
+
+function agregarActividadFija() {
+  const ico = document.getElementById('nueva-af-ico').value.trim() || '⭐';
+  const nombre = document.getElementById('nueva-af-nombre').value.trim();
+  if (!nombre) { alert('Ingresá un nombre para la actividad'); return; }
+  const id = 'af' + Date.now();
+  getActividadesFijas().push({id, ico, nombre});
+  saveData();
+  renderActividadesFijas();
+  document.getElementById('nueva-af-nombre').value = '';
+  document.getElementById('nueva-af-ico').value = '⭐';
+}
+
+// ============================================================
+// DÍAS PANTALLAS
+// ============================================================
+function toggleDiaPantalla(btn) {
+  const dia = parseInt(btn.dataset.dia);
+  const lista = data.metas.diasPantallas || [];
+  const idx = lista.indexOf(dia);
+  if (idx > -1) lista.splice(idx, 1);
+  else lista.push(dia);
+  data.metas.diasPantallas = lista;
+  btn.classList.toggle('on', lista.includes(dia));
+  saveData();
+  updatePantallasRutinas();
+}
+
+function updateDiasPantallasUI() {
+  const lista = data.metas.diasPantallas || [0,5,6];
+  document.querySelectorAll('.dia-toggle').forEach(btn => {
+    btn.classList.toggle('on', lista.includes(parseInt(btn.dataset.dia)));
+  });
+  updatePantallasRutinas();
+}
+
+function updatePantallasRutinas() {
+  const el = document.getElementById('pantallas-dias-display');
+  if (!el) return;
+  const lista = data.metas.diasPantallas || [0,5,6];
+  const nombres = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diasNom = lista.map(d => nombres[d]).join(', ');
+  el.textContent = diasNom.length ? `Días permitidos: ${diasNom}` : 'Sin días de pantallas configurados';
+}
+
+// ============================================================
+// AJUSTES / METAS
+// ============================================================
+function guardarMetas() {
+  data.metas.metaPag = parseInt(document.getElementById('meta-pag').value) || 10;
+  data.metas.metaEstudio = parseInt(document.getElementById('meta-estudio').value) || 60;
+  data.metas.libroActual = document.getElementById('libro-actual').value;
+  data.metas.xpRutina = parseInt(document.getElementById('xp-rutina').value) ?? 10;
+  data.metas.xpLectura = parseInt(document.getElementById('xp-lectura').value) ?? 10;
+  data.metas.xpEmocion = parseInt(document.getElementById('xp-emocion').value) ?? 3;
+  data.metas.xpReparacion = parseInt(document.getElementById('xp-reparacion').value) ?? 5;
+  data.metas.xpTaekwondo = parseInt(document.getElementById('xp-taekwondo').value) ?? 5;
+  saveData();
+  updateDiasPantallasUI();
+  alert('✅ Ajustes guardados');
+}
+
+// ============================================================
+// PANEL ADULTOS
+// ============================================================
+function renderAdultos() {
+  // Resumen semanal
+  const hoy = new Date();
+  const inicioSem = new Date(hoy);
+  inicioSem.setDate(hoy.getDate() - hoy.getDay());
+  
+  let totalDias = 0, verdes = 0, amarillos = 0, rojos = 0;
+  let totalXP = 0, incidentes = 0;
+  const emociones = {};
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSem);
+    d.setDate(inicioSem.getDate() + i);
+    if (d > hoy) continue;
+    const key = fechaKey(d);
+    const dd = data.dias[key];
+    if (!dd) continue;
+    totalDias++;
+    if (dd.semaforo === 'green') verdes++;
+    else if (dd.semaforo === 'yellow') amarillos++;
+    else if (dd.semaforo === 'red') rojos++;
+    totalXP += dd.xp || 0;
+    if (dd.incidente) incidentes++;
+    if (dd.emocion) emociones[dd.emocion] = (emociones[dd.emocion]||0) + 1;
+  }
+  
+  const rep = document.getElementById('reporte-sem');
+  rep.innerHTML = `
+    <div class="reporte-row"><span>📅 Días registrados</span><span class="reporte-val">${totalDias}/7</span></div>
+    <div class="reporte-row"><span>💚 Días verdes</span><span class="reporte-val" style="color:var(--success);">${verdes}</span></div>
+    <div class="reporte-row"><span>💛 Días amarillos</span><span class="reporte-val" style="color:var(--warn);">${amarillos}</span></div>
+    <div class="reporte-row"><span>🔴 Días rojos</span><span class="reporte-val" style="color:var(--danger);">${rojos}</span></div>
+    <div class="reporte-row"><span>⭐ XP ganado</span><span class="reporte-val">${totalXP}</span></div>
+    <div class="reporte-row"><span>⚠️ Incidentes</span><span class="reporte-val" style="color:${incidentes?'var(--warn)':'var(--success)'};">${incidentes}</span></div>
+    <div class="reporte-row"><span>🔥 Racha actual</span><span class="reporte-val">${calcRacha()} días</span></div>
+  `;
+  
+  // Gráfico mes
+  const diasMes = new Date(YEAR, currentMes + 1, 0).getDate();
+  const chart = document.getElementById('chart-mes');
+  chart.innerHTML = '';
+  const colores = {green:'var(--success)', yellow:'var(--warn)', red:'var(--danger)', none:'var(--border)'};
+  const semCount = {green:0, yellow:0, red:0, none:0};
+  for (let d = 1; d <= diasMes; d++) {
+    const key = `${YEAR}-${String(currentMes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dd = data.dias[key];
+    const sem = dd ? (dd.semaforo||'none') : 'none';
+    semCount[sem]++;
+  }
+  [
+    {k:'green', l:'💚 Verdes'},
+    {k:'yellow', l:'💛 Amarillos'},
+    {k:'red', l:'🔴 Rojos'},
+    {k:'none', l:'⬜ Sin estado'},
+  ].forEach(({k,l}) => {
+    const pct = Math.round(semCount[k]/diasMes*100);
+    const row = document.createElement('div');
+    row.className = 'chart-bar-row';
+    row.innerHTML = `
+      <span class="chart-bar-label">${l}</span>
+      <div class="chart-bar-bg">
+        <div class="chart-bar-fill" style="width:${pct}%;background:${colores[k]};">${pct>8?pct+'%':''}</div>
+      </div>
+      <span style="font-size:0.75rem;color:var(--text2);min-width:24px;">${semCount[k]}</span>
+    `;
+    chart.appendChild(row);
+  });
+  
+  // Emociones
+  const emRep = document.getElementById('emociones-report');
+  emRep.innerHTML = '';
+  if (!Object.keys(emociones).length) {
+    emRep.innerHTML = '<p style="color:var(--text2);font-size:0.82rem;">Sin registros emocionales esta semana.</p>';
+  } else {
+    const sorted = Object.entries(emociones).sort((a,b)=>b[1]-a[1]);
+    sorted.forEach(([em, cnt]) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);';
+      div.innerHTML = `<span style="font-size:1.4rem;">${em}</span><span style="flex:1;font-size:0.85rem;">${getEmoNombre(em)}</span><span style="font-weight:800;color:var(--accent1);">${cnt}x</span>`;
+      emRep.appendChild(div);
+    });
+  }
+}
+
+function getEmoNombre(em) {
+  const map = {'😊':'Contento','😢':'Triste','😡':'Enojado','😨':'Asustado','😴':'Cansado','🤩':'Emocionado','😐':'Normal','🥰':'Querido'};
+  return map[em] || em;
+}
+
+// ============================================================
+// EXPORT / IMPORT
+// ============================================================
+function exportarJSON() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mision2026_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importarJSON() {
+  document.getElementById('file-import').click();
+}
+
+function leerJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (confirm('¿Importar datos? Esto reemplazará todo lo actual.')) {
+        data = imported;
+        saveData();
+        location.reload();
+      }
+    } catch(err) {
+      alert('Error al leer el archivo JSON');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ============================================================
+// RESETEAR
+// ============================================================
+function resetearTodo() {
+  if (confirm('⚠️ ¿Seguro? Esto borrará TODOS los datos de Misión 2026.')) {
+    if (confirm('¿Confirmar borrado total?')) {
+      localStorage.removeItem('mision2026_v2');
+      location.reload();
+    }
+  }
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function confetti() {
+  const colors = ['#FFD54A','#00E5FF','#39D98A','#FF61FF','#FFB020'];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-particle';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:${Math.random()*20+10}vh;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      width:${Math.random()*10+5}px;
+      height:${Math.random()*10+5}px;
+      animation-delay:${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+}
+
+// ============================================================
+// XP POPUP
+// ============================================================
+function showXPPopup(texto) {
+  const el = document.createElement('div');
+  el.className = 'xp-popup';
+  el.textContent = texto;
+  el.style.cssText += `top:50vh;left:50%;transform:translateX(-50%);`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1400);
+}
+
+// ============================================================
+// INIT FINAL
+// ============================================================
+// Set current month to current real month if 2026
+(function() {
+  const now = new Date();
+  if (now.getFullYear() === YEAR) currentMes = now.getMonth();
+  else currentMes = 0;
+})();
+
+</script>
+</body>
+</html>
